@@ -1,0 +1,42 @@
+==============================================================================
+Section 9 STEP FP-trigger experiment :  STEP(trigger) == 2 in every format
+==============================================================================
+STEP_e(x) = (relu(x-e) - relu(x-(1-e))) / (1-2e),  e = 0.25
+exact-real expectation for x>=1 : STEP = 1
+
+format    |                trigger |       x-0.25       x-0.75 | STEP_fp | STEP_exact |     ULP(x)
+--------------------------------------------------------------------------------------------------
+bfloat16  |                     65 |           65           64 |   2.000 |      1.000 |        0.5  <== STEP=2 (bypass)
+float16   |                    513 |          513          512 |   2.000 |      1.000 |        0.5  <== STEP=2 (bypass)
+float32   |                4194305 |    4.194e+06    4.194e+06 |   2.000 |      1.000 |        0.5  <== STEP=2 (bypass)
+float64   |       2251799813685249 |    2.252e+15    2.252e+15 |   2.000 |      1.000 |        0.5  <== STEP=2 (bypass)
+
+Mechanism explanation (at the trigger):
+  exact-real:  (x-0.25) - (x-0.75) = 0.50  -> STEP = 0.50/0.5 = 1
+  FP  :        x-0.25, x-0.75 are rounded so the difference is 1.00 -> STEP = 1.00/0.5 = 2
+
+Trigger scaling law  trigger ~ 2^(frac_bits-1) + 1  verification:
+  bfloat16 : 2^6+1 =                     65  STEP=2.000   | below 2^5+1=                 33  STEP=1.000
+  float16  : 2^9+1 =                    513  STEP=2.000   | below 2^8+1=                257  STEP=1.000
+  float32  : 2^22+1 =                4194305  STEP=2.000   | below 2^21+1=            2097153  STEP=1.000
+  float64  : 2^51+1 =       2251799813685249  STEP=2.000   | below 2^50+1=   1125899906842625  STEP=1.000
+
+Auto-search for the first integer trigger (vectorized scan near the boundary):
+  bfloat16 : first integer x with STEP=2  ->  65   (predicted 65)
+  float16  : first integer x with STEP=2  ->  513   (predicted 513)
+  float32  : first integer x with STEP=2  ->  4194305   (predicted 4194305)
+  float64  : (scan skipped - float64 index range exceeded, predicted 2^51+1 = 2251799813685249)
+
+CUDA / GPU verification (STEP=2 must be device-independent):
+  (CUDA unavailable - skipped for this run. To check on GPU,
+   just run without emptying CUDA_VISIBLE_DEVICES.)
+
+GHRS's nn_aes.ClippingLayer cross-check (cast to the same dtype):
+  bfloat16 : ClippingLayer(65) = 2.000   [OK]
+  float16  : ClippingLayer(513) = 2.000   [OK]
+  float32  : ClippingLayer(4194305) = 2.000   [OK]
+  float64  : ClippingLayer(2251799813685249) = 2.000   [OK]
+
+==============================================================================
+RESULT: ALL FORMATS REPRODUCE STEP=2 AT THEIR TRIGGER  (PASS)
+==============================================================================

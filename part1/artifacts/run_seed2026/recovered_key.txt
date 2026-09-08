@@ -1,0 +1,6 @@
+# recovered at 2026-08-26 19:58:18
+# total_time  140h 50m 2s
+# verify      VERIFIED (known-plaintext PASS)
+K0_roundkey0 = 0xf3f49249dc28ff90a5aec7978306d03b
+K1_roundkey1 = 0xf38b2ffc80a4df5a51c9bc701e7ea419
+master_256   = 0xf3f49249dc28ff90a5aec7978306d03bf38b2ffc80a4df5a51c9bc701e7ea419

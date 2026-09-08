@@ -1,0 +1,26 @@
+columns: 200000   seed: 20260907   tau: 8   model: ttables
+
+distinct forced wrong candidates per column:
+      0 :  200000  (100.000%)
+
+per-candidate ell: {}
+per-candidate score: {}
+  -> every wrong candidate scores 7*ell, and ell <= 2
+
+columns carrying an ell=2 candidate: 0/200000 (0.000%)   closed form 1.553%
+
+true-candidate score (exact-real criterion):
+     23 :       2  ( 0.001%)
+     24 :      17  ( 0.009%)
+     25 :      94  ( 0.047%)
+     26 :     711  ( 0.355%)
+     27 :    3453  ( 1.726%)
+     28 :   12497  ( 6.248%)
+     29 :   32904  (16.452%)
+     30 :   58363  (29.181%)
+     31 :   62108  (31.054%)
+     32 :   29851  (14.925%)
+  below tau=8: 0/200000 (0.000%)
+
+Note: this is the exact-real criterion. The model runs in float16, and
+Appendix A of the paper reports the residual between the two.

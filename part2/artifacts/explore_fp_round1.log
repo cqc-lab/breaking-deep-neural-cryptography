@@ -1,0 +1,17 @@
+==========================================================================
+E1: does the finite/NaN oracle change when ONLY K1 (round key 1) changes?
+==========================================================================
+  finite/NaN pattern identical across K1 change : True
+  variant-A finite pattern vs K0 (fp64 naive)   : 65/128   (fp64 naive is weak by design; full K0 recovery is the fp16 result, see fp_key_recovery.py)
+  clean(finite) rows whose CIPHERTEXT changed   : 128/128
+  => oracle sees only K0; K1 shows up only inside correct AES ciphertexts
+
+==========================================================================
+E2: a single input trigger -> how localized/clean is it at M1 (ARK1 input)?
+==========================================================================
+  trigger@coord   0  STEP=2.0  k0=0  | M1 off-domain coords= 32/128  finite=True  max|M1|=3.21e+03
+  trigger@coord   1  STEP=2.0  k0=0  | M1 off-domain coords= 32/128  finite=True  max|M1|=3.91e+03
+  trigger@coord   5  STEP=2.0  k0=0  | M1 off-domain coords= 30/128  finite=True  max|M1|=3.09e+03
+  trigger@coord   8  STEP=2.0  k0=0  | M1 off-domain coords= 30/128  finite=True  max|M1|=2.85e+03
+  (k0=1 -> ARK0 corrects 2->1 -> M1 fully binary, no probe;
+   k0=0 -> value 2 hits round-1 SubBytes -> off-domain spreads, not a clean 2)

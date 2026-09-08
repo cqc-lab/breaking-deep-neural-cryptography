@@ -1,0 +1,5 @@
+epsilon=2/5 | why K0=1 rows corrupt | model=NeuralAESBase | 16 bases | N=20 keys
+bfloat16  STEP=1.258 | K0=1 rows: 20528, corrupt 19245 (93.8%) | reasons {'nonfinite': 19245, 'bound': 0, 'lowHW': 0} | bound-over 1.5 by: min=0.000 med=0.000 max=0.000 | offdiag-binary=True
+float16   STEP=1.249 | K0=1 rows: 20528, corrupt 0 (0.0%) | reasons {'nonfinite': 0, 'bound': 0, 'lowHW': 0} | bound-over 1.5 by: min=0.000 med=0.000 max=0.000 | offdiag-binary=True
+float32   STEP=1.250 | K0=1 rows: 20528, corrupt 11 (0.1%) | reasons {'nonfinite': 0, 'bound': 0, 'lowHW': 11} | bound-over 1.5 by: min=0.000 med=0.000 max=0.000 | offdiag-binary=True
+[exit 0]

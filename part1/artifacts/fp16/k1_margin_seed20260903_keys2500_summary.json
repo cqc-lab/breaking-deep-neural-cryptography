@@ -1,0 +1,26 @@
+{
+  "seed": 20260903,
+  "nkeys": 2500,
+  "max_key": 2500,
+  "columns": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "nwrong_per_keycol": 1000,
+  "tau": 8,
+  "dtype": "float16",
+  "device": "cpu",
+  "true_count": {
+    "min": 7,
+    "median": 31.0,
+    "max": 32,
+    "mean": 28.9662
+  },
+  "true_below_tau": 2,
+  "wrong_max_over_all": 7,
+  "wrong_ge_tau_total": 0,
+  "wrong_candidates_total": 10000000,
+  "per_key_failure_upper_95ci": 0.0011975752431599984
+}

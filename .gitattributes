@@ -1,0 +1,8 @@
+# Store LF in the repository and check out LF on every platform.
+#
+# The paper pins the two upstream companion files (nn_aes.py, utils.py) by a
+# line-ending-independent digest: SHA-256 after normalizing CRLF to LF. Forcing
+# LF here makes a plain `sha256sum` on a fresh clone reproduce that digest
+# directly, on Windows as well as on Linux/macOS, regardless of the cloner's
+# core.autocrlf setting.
+* text=auto eol=lf

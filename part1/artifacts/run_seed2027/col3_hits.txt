@@ -1,0 +1,1 @@
+c=0x49e9eb59 scanned=1240072192 enc=31 K1_col=['1b', 'bb', 'b9', '0b']

@@ -1,0 +1,12 @@
+epsilon=2/5 vote threshold | 100 keys/format/model | M=16 random bases | read 0 iff corrupt_count >= theta
+format    model    | best theta / recovery | true1_maxc  true0_c0(unrecov)  true0_medc
+  bfloat16  Base     | theta=16   91/100   (all-theta: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 91]) |  15     0  16.0
+  bfloat16  TTables  | theta=14   93/100   (all-theta: [0, 0, 1, 2, 5, 5, 16, 25, 33, 49, 62, 75, 88, 93, 93, 16]) |  15     0  16.0
+  float16   Base     | theta= 1  100/100   (all-theta: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 98, 67, 1]) |   0     0  16.0
+  float16   TTables  | theta= 1  100/100   (all-theta: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 91, 8]) |   0     0  16.0
+  float32   Base     | theta= 2  100/100   (all-theta: [84, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 98, 75, 1]) |   1     0  16.0
+  float32   TTables  | theta= 1  100/100   (all-theta: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 88, 9]) |   0     0  16.0
+  float64   Base     | theta= 1  100/100   (all-theta: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 96, 67, 1]) |   0     0  16.0
+  float64   TTables  | theta= 1  100/100   (all-theta: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 88, 4]) |   0     0  16.0
+legend: true1_maxc=max corrupt-count over true-K0=1 bits (want < theta); true0_c0=#true-K0=0 bits corrupted in 0 bases (unrecoverable); true0_medc=median corrupt-count of true-0 bits
+[exit 0]

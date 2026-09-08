@@ -1,0 +1,35 @@
+==========================================================================================
+ FP attack vs the output-STEP stage   (oracle: finite AND |out|<=1.5 AND HW>=4 -> bit 1)
+==========================================================================================
+[1] FIPS key 2b7e151628aed2a6abf7158809cf4f3c
+    D_S^ref (no output STEP)  vs  D_S^paper (with output STEP)
+    format    | variant                |      recovery | bit1 HW / bit0 HW / bit0 non-finite
+    ----------------------------------------------------------------------------------------
+    bfloat16  | D_S^ref  (no oStep)    | 128/128 OK  |  69.0 /   0.0 / 63
+    bfloat16  | D_S^paper (+oStep)     | 128/128 OK  |  69.0 /   0.0 / 63
+    ----------------------------------------------------------------------------------------
+    float16   | D_S^ref  (no oStep)    | 128/128 OK  |  69.0 /   0.0 / 63
+    float16   | D_S^paper (+oStep)     | 128/128 OK  |  69.0 /   0.0 / 63
+    ----------------------------------------------------------------------------------------
+    float32   | D_S^ref  (no oStep)    | 128/128 OK  |  69.0 /   0.0 / 63
+    float32   | D_S^paper (+oStep)     | 128/128 OK  |  69.0 /   0.0 / 63
+    ----------------------------------------------------------------------------------------
+    float64   | D_S^ref  (no oStep)    | 128/128 OK  |  69.0 / 128.0 / 0
+    float64   | D_S^paper (+oStep)     | 128/128 OK  |  69.0 /   0.0 / 0
+    ----------------------------------------------------------------------------------------
+
+[2] Random-key reproducibility on D_S^paper (WITH output STEP), 10 keys/format/model
+    model = NeuralAESBase
+      bfloat16 : full-key recovery 10/10
+      float16  : full-key recovery 10/10
+      float32  : full-key recovery 10/10
+      float64  : full-key recovery 10/10
+    model = TTablesNeuralAES
+      bfloat16 : full-key recovery 10/10
+      float16  : full-key recovery 10/10
+      float32  : full-key recovery 10/10
+      float64  : full-key recovery 10/10
+
+==========================================================================================
+ RESULT: output STEP does NOT stop the attack in any format (PASS)
+==========================================================================================

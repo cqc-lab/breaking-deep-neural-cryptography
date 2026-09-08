@@ -1,0 +1,34 @@
+================================================================================
+(1) On each format's STEP-trigger: STEP fails (=2); do the clamps fix it?
+================================================================================
+format                 trigger |   STEP  naive_clamp  clamp01  STEP(clamp01)
+bfloat16                    65 |   2.00         1.00     1.00           1.00
+float16                    513 |   2.00         1.00     1.00           1.00
+float32                4194305 |   2.00         1.00     1.00           1.00
+float64       2251799813685249 |   2.00         1.00     1.00           1.00
+
+================================================================================
+(2) Is naive_clamp (GHRS ClippedReLU) a faithful [0,1] clamp in finite precision?
+================================================================================
+  paper example (fp16): x-1=2049 rounds to 2048, so naive_clamp(2050) = 2   (NOT in [0,1])
+  ClippedReLU leaves [0,1] for 512 of the fp16 integers in [2,65504)
+     stray values taken: [2.0]  ->  STEP maps them to [1.0]  (binary: STEP neutralizes them, so ClippedReLU still blocks THIS attack)
+  clamp01 leaves [0,1] for 0 inputs  (provably 0, Lemma):  clamp01(1e4)=1.00, clamp01(inf)=1.00
+  => ClippedReLU is not a finite-precision clamp; clamp01 confines every input
+     to [0,1] unconditionally, independent of STEP tolerating out-of-range values.
+
+================================================================================
+(3) Full attack against clamp01-defended model (unmodified nn_aes)
+================================================================================
+  float16: NO defense  -> bits 128/128  full=KEY RECOVERED
+  float16: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
+  float32: NO defense  -> bits 128/128  full=KEY RECOVERED
+  float32: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
+
+================================================================================
+(4) FIPS-197 correctness preserved by the clamp01-prepended model
+================================================================================
+  clamp01(plaintext bits) identical to plaintext bits : True
+  protected-model ciphertext = 0x3925841d02dc09fbdc118597196a0b32
+  FIPS-197 reference         = 0x3925841d02dc09fbdc118597196a0b32
+  => clamp-prepended model preserves FIPS-197 correctness: PASS

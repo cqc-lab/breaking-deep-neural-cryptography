@@ -1,0 +1,16 @@
+# Tested with PyTorch 2.5.1 / Python 3.10 (CPU runs of Part I and Part II), and
+# independently reproduced on PyTorch 2.7.1+cpu (Part II), confirming the results
+# are not a version artefact. Any torch >= 2.2 should work. The RTX 5080 (Blackwell,
+# sm_120) censuses of Part I ran on PyTorch 2.11.0+cu128 (CUDA 12.8); that GPU needs
+# a cu128 or later build.
+#
+# NOTE (CPU + float16): run Part II on a CPU-native wheel (torch ...+cpu). A CUDA
+# build forced onto CPU (e.g. 2.5.1+cu121 with CUDA_VISIBLE_DEVICES=-1) has an
+# unstable CPU float16 kernel that segfaults under the sustained fp16 work in
+# fp_key_recovery.py (part [3]); float32 is unaffected. Install the CPU wheel with:
+#   pip install --index-url https://download.pytorch.org/whl/cpu --force-reinstall --no-deps torch==2.5.1
+# (plain `pip install torch==2.5.1 --index-url .../cpu` is a no-op: pip treats
+#  2.5.1+cu121 and 2.5.1+cpu as the same version, so --force-reinstall is required.)
+torch>=2.2
+numpy>=1.23
+pandas>=1.5

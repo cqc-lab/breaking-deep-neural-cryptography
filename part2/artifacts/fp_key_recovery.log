@@ -1,0 +1,46 @@
+==============================================================================
+Section 9 full 128-bit key recovery across FP formats
+PyTorch 2.5.1+cpu  CUDA=False
+==============================================================================
+
+[1] FIPS key 2b7e151628aed2a6abf7158809cf4f3c
+
+bfloat16  (trigger=65):
+  STEP(trig)=2.000  MASK=0.000   k1(clean) max|out|=1
+  k0(corrupted) 63 rows:  NaN=63  Inf(overflow,not NaN)=0  large-finite=0
+  (A) naive  finite/non-finite : 128/128  full=OK
+  (B) robust bounded           : 128/128  full=OK
+
+float16  (trigger=513):
+  STEP(trig)=2.000  MASK=0.000   k1(clean) max|out|=1
+  k0(corrupted) 63 rows:  NaN=63  Inf(overflow,not NaN)=0  large-finite=0
+  (A) naive  finite/non-finite : 128/128  full=OK
+  (B) robust bounded           : 128/128  full=OK
+
+float32  (trigger=4194305):
+  STEP(trig)=2.000  MASK=0.000   k1(clean) max|out|=1
+  k0(corrupted) 63 rows:  NaN=63  Inf(overflow,not NaN)=0  large-finite=0
+  (A) naive  finite/non-finite : 128/128  full=OK
+  (B) robust bounded           : 128/128  full=OK
+
+float64  (trigger=2251799813685249):
+  STEP(trig)=2.000  MASK=0.000   k1(clean) max|out|=1
+  k0(corrupted) 63 rows:  NaN=0  Inf(overflow,not NaN)=0  large-finite=63
+  (A) naive  finite/non-finite :  65/128  full=FAIL
+  (B) robust bounded           : 128/128  full=OK
+
+==============================================================================
+[2] Random-key reproducibility (oracle B = robust), 10 keys/format
+==============================================================================
+  bfloat16 : naive full-recover 10/10   |   robust full-recover 10/10
+  float16  : naive full-recover 10/10   |   robust full-recover 10/10
+  float32  : naive full-recover 10/10   |   robust full-recover 10/10
+  float64  : naive full-recover  0/10   |   robust full-recover 10/10
+
+==============================================================================
+[3] Model axis (float16): NeuralAESBase vs TTablesNeuralAES, 100 keys/model
+==============================================================================
+  NeuralAESBase     : robust full-recover 100/100
+  TTablesNeuralAES  : robust full-recover 100/100
+  both models combined : 200/200
+

@@ -1,0 +1,5 @@
+seed=2029 model=ttables (TTablesNeuralAES) dtype=float32 device=cpu
+col0: true candidate 0xad70cbb0 collisions=31/32 (exact-real ttables: 31)  | 64 base-forced candidates on this network: scores [0]
+col1: true candidate 0x298f55dd collisions=29/32 (exact-real ttables: 30)  | 64 base-forced candidates on this network: scores [0]
+col2: true candidate 0x2c3e0bc2 collisions=30/32 (exact-real ttables: 30)  | 64 base-forced candidates on this network: scores [0]
+col3: true candidate 0xea05a2b6 collisions=32/32 (exact-real ttables: 32)  | 64 base-forced candidates on this network: scores [0]

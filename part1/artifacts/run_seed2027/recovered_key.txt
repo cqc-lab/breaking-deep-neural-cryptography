@@ -1,0 +1,6 @@
+# recovered at 2026-09-02 07:19:39
+# total_time  140h 49m 47s
+# verify      VERIFIED (known-plaintext PASS)
+K0_roundkey0 = 0xcae54cda528e270ba7ba792d0378f603
+K1_roundkey1 = 0x145f656c76cc1d7aed52c2b21bbbb90b
+master_256   = 0xcae54cda528e270ba7ba792d0378f603145f656c76cc1d7aed52c2b21bbbb90b

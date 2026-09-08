@@ -1,0 +1,1 @@
+c=0xa1d97dae scanned=2715385856 enc=23 K1_col=['f3', '8b', '2f', 'fc']

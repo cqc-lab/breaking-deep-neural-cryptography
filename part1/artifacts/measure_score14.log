@@ -1,0 +1,9 @@
+seed=20260903 nkeys=10000 dtype=float32
+columns with an ell=2 candidate: 639/40000 = 1.597%  (closed form 1-(255/256)^4 = 1.553%); candidates: 642
+  100/639 columns, scores so far {14: 100} (3s)
+  200/639 columns, scores so far {14: 201} (6s)
+  300/639 columns, scores so far {14: 301} (9s)
+  400/639 columns, scores so far {14: 401} (12s)
+  500/639 columns, scores so far {14: 501} (15s)
+  600/639 columns, scores so far {14: 602} (18s)
+measured collision counts of all 642 ell=2 candidates: {14: 642}  (predicted: all 14)
