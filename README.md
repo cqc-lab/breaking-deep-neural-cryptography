@@ -210,8 +210,8 @@ Each `run_seed<SEED>/` directory is an independent blind census of a fresh rando
 key (`random.Random(SEED)`), executed with
 `python run_attack.py --record-all --seed <SEED> --outdir artifacts/run_seed<SEED>`:
 per column a blind scan of the full `[0, 2^32)` space (the window is *not*
-positioned using the key) with **`RECORD_ALL=True`**, on 2 × RTX 5080. In both
-`run_seed2026/` and `run_seed2027/` all four columns were scanned to completion
+positioned using the key) with **`RECORD_ALL=True`**, on 2 × RTX 5080. In `run_seed2026/`,
+`run_seed2027/`, and `run_hist_2028/` all four columns were scanned to completion
 (`col{N}.log` end at `4,294,950,912/4,294,967,296`); each column produced
 **exactly one ciphertext-collision candidate** — the true `K1` column — i.e.
 **zero false positives over the full `4 × 2^32 ≈ 1.7×10^10` search space**
@@ -238,12 +238,14 @@ the base network is `artifacts/check_census_key_seed2029_base.log`).
 `run_hist_2028/` is a third census (seed `2028`) run with `HIST=1`, which
 additionally writes `col{N}_hist.txt`: the full histogram of the collision score
 over every candidate of the column (33 counts, score `0..32`, plus the `scanned=`
-position). The committed histograms cover columns 0 and 1 in full. In both
-columns every wrong candidate scores `0` or `7`, exactly `1024` score `7` — the
-wrong candidates enumerated by `enumerate_forced_candidates.py
---census-seeds 2028 --hist-dir artifacts/run_hist_2028` — and the correct candidate
-scores `24` / `32`, the values of the exact-real criterion. No wrong candidate
-scores `1..6` or `8..32`.
+position). All four columns are complete and the assembled key is `VERIFIED`
+(`recovered_key.txt`, 140h 50m). In every column every wrong candidate scores `0`
+or `7`, exactly `1024` score `7` — the wrong candidates enumerated by
+`enumerate_forced_candidates.py --census-seeds 2028 --hist-dir artifacts/run_hist_2028
+--hits-dir artifacts/run_hist_2028` — and the correct candidates score
+`24` / `32` / `28` / `31` against the exact-real prediction `24` / `32` / `30` / `31`
+(column 2 loses two collisions to float16 rounding, as discussed in the paper's
+Appendix A.4). No wrong candidate scores `1..6` or `8..32`.
 
 > Note: both `run_attack.py` and `aes256_attack_gpu.py` run the **full blind
 > `[0, 2^32)` scan** per column — the search never uses the key (`K1_TRUE` is read
@@ -300,7 +302,7 @@ Part II tables above document. Paths are relative to `part1/artifacts/` or
 | Paper result | Script | Artifact |
 |---|---|---|
 | Full censuses, two keys (Sect. 3.3) | `run_attack.py --record-all` | `run_seed2026/`, `run_seed2027/` |
-| Full score histograms, third key, columns 0 and 1 (Sect. 3.3) | `HIST=1 run_attack.py --record-all` | `run_hist_2028/` |
+| Full score histograms, third key, all four columns (Sect. 3.3) | `HIST=1 run_attack.py --record-all` | `run_hist_2028/` |
 | Margin census in float32 and float16 (Sect. 3.3, Fig. 2) | `estimate_k1_margin.py` | `fp32/`, `fp16/` |
 | Direct measurement of the candidates scoring 14 (Sect. 3.3) | `measure_score14.py` | `measure_score14.log` |
 | Enumeration over 200,000 columns, both networks (App. A.3) | `enumerate_forced_candidates.py` | `forced_candidates.log`, `forced_candidates_ttables.log` |
