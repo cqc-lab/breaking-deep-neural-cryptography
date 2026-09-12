@@ -277,7 +277,7 @@ Appendix A.4). No wrong candidate scores `1..6` or `8..32`.
 | `fp_epsilon_independence.py` | Shows the attack is **independent of `ε`**: 100 random keys per format on each of the two networks (800 recoveries per `ε`) at the released `ε = 1/4` (**800/800**, the `ε = 1/4` row of the paper's Table 3), the published `ε = 1/3` (trigger `2^(f-2)+1`, `STEP = 3/2`, **800/800**), `ε = 1/5` (**800/800**), and the low-margin `ε = 2/5` (656/800). | `CUDA_VISIBLE_DEVICES=-1 python fp_epsilon_independence.py` |
 | `counter_fp.py` | Verifies the **defense** `clamp01(x) = 1 - relu(1 - relu(x))`: it maps every trigger to `1`, so `STEP(clamp01(t)) = 1` and the attack loses all key information. Also contrasts it with GHRS's `ClippedReLU = relu(x)-relu(x-1)`, which is **not** a `[0,1]` clamp in finite precision (e.g. fp16 `ClippedReLU(2050)=2`) and blocks the attack only because `STEP` maps that stray `2` back to `1`, whereas `clamp01` provably stays in `[0,1]`. | `CUDA_VISIBLE_DEVICES=-1 python counter_fp.py` |
 | `explore_fp_round1.py` | Explores whether the round-1 key `K1` is reachable by the FP oracle (conclusion: blocked under the defense; a single trigger corrupts a whole `M1` column, 30–32/128, rather than a clean per-bit signal). | `CUDA_VISIBLE_DEVICES=-1 python explore_fp_round1.py` |
-| `fp_eps25_vote.py` | At `ε = 2/5`, probes each bit with `M` random base plaintexts and a vote threshold `θ`; recovers **every key in fp16/fp32/fp64** (`600/600`), while `bfloat16` is precision-limited (paper, Appendix D). | `CUDA_VISIBLE_DEVICES=-1 python fp_eps25_vote.py` |
+| `fp_eps25_vote.py` | At `ε = 2/5`, probes each bit with `M` random base plaintexts and a vote threshold `θ`; recovers **every key in fp16/fp32/fp64** (`600/600`), while `bfloat16` is precision-limited (paper, Appendix C). | `CUDA_VISIBLE_DEVICES=-1 python fp_eps25_vote.py` |
 | `fp_eps25_why_corrupt.py` | Diagnoses the `bfloat16` exception at `ε = 2/5`: the non-binary `K0[i]=1` coordinate overflows to a **non-finite** value under every non-zero base plaintext. | `CUDA_VISIBLE_DEVICES=-1 python fp_eps25_why_corrupt.py` |
 
 **Verified outcome (CPU, PyTorch FP16):** on both `NeuralAESBase` and
@@ -295,7 +295,7 @@ runs unchanged on CPU or GPU.
 
 ## Paper results and their artifacts
 
-The paper's Appendix C contains only the table below (result, script, committed
+The paper's Appendix D contains only the table below (result, script, committed
 artifact) and points here for the options of each script, which the Part I and
 Part II tables above document. Paths are relative to `part1/artifacts/` or
 `part2/artifacts/`.
@@ -313,8 +313,8 @@ Part II tables above document. Paths are relative to `part1/artifacts/` or
 | 80,000 keys with the output-side STEP (Sect. 4.4) | `fp_key_recovery_output_step.py` (`N_KEYS=10000`) | `fp_output_step_10000keys.log` |
 | Sweep over ε (Table 3) | `fp_epsilon_independence.py` | `fp_epsilon_independence.log` |
 | Validation of clamp01 (Sect. 5.2) | `counter_fp.py` | `counter_fp.log` |
-| Multi-plaintext voting (Table 5) | `fp_eps25_vote.py` | `fp_eps25_vote.log` |
-| bfloat16 diagnosis over 20 keys (App. D) | `fp_eps25_why_corrupt.py` | `fp_eps25_why_corrupt.log` |
+| Multi-plaintext voting (Table 4) | `fp_eps25_vote.py` | `fp_eps25_vote.log` |
+| bfloat16 diagnosis over 20 keys (App. C) | `fp_eps25_why_corrupt.py` | `fp_eps25_why_corrupt.log` |
 
 `explore_fp_round1.py` and its log are a diagnostic not reported in the paper.
 
