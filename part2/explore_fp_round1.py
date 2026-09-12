@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2026 Sisung Kim and Dongjae Lee
+# Copyright (C) 2026 the authors (anonymized for review)
 #
 # This file is part of the artifact for "Cryptanalysis of Deep Neural
 # Cryptography: Second Round Key Recovery on the Unprotected Implementation
