@@ -211,7 +211,7 @@ key (`random.Random(SEED)`), executed with
 `python run_attack.py --record-all --seed <SEED> --outdir artifacts/run_seed<SEED>`:
 per column a blind scan of the full `[0, 2^32)` space (the window is *not*
 positioned using the key) with **`RECORD_ALL=True`**, on 2 × RTX 5080. In `run_seed2026/`,
-`run_seed2027/`, and `run_hist_2028/` all four columns were scanned to completion
+`run_seed2027/`, `run_hist_2028/`, and `run_hist_2029_ttables/` all four columns were scanned to completion
 (`col{N}.log` end at `4,294,950,912/4,294,967,296`); each column produced
 **exactly one ciphertext-collision candidate** — the true `K1` column — i.e.
 **zero false positives over the full `4 × 2^32 ≈ 1.7×10^10` search space**
@@ -230,10 +230,14 @@ All Part I scripts build the base network (`NeuralAESBase`) by default; setting
 `MODEL=ttables` in the environment builds GHRS's T-tables network
 (`TTablesNeuralAES`) instead, for the census (`aes256_attack_gpu.py`,
 `run_attack.py`), the margin census (`estimate_k1_margin.py`, which records
-`model=` in its CSV header and summary; the committed CSV headers and the `fp32` summary predate this field) and `check_census_key.py`. The paper's
-full-scale results are on the base network; the T-tables network is checked on
-the seed-2029 key (`artifacts/check_census_key_seed2029_ttables.log`; the same key on
-the base network is `artifacts/check_census_key_seed2029_base.log`).
+`model=` in its CSV header and summary; the committed CSV headers and the `fp32` summary predate this field) and `check_census_key.py`. The base-network
+censuses are seeds 2026-2028; `run_hist_2029_ttables/` is a full census of the
+seed-2029 key on the T-tables network (`MODEL=ttables HIST=1`, 109h 58m,
+`recovered_key.txt` `VERIFIED`): every wrong candidate in all four columns scores
+`0` (no `7` at all, as `enumerate_forced_candidates.py --model ttables` predicts)
+and the correct candidates score `31` / `28` / `30` / `32` against the exact-real
+`31` / `30` / `30` / `32`. `check_census_key.py` scores the same key on CPU
+(`artifacts/check_census_key_seed2029_base.log`, `..._ttables.log`).
 
 `run_hist_2028/` is a third census (seed `2028`) run with `HIST=1`, which
 additionally writes `col{N}_hist.txt`: the full histogram of the collision score
@@ -306,7 +310,8 @@ Part II tables above document. Paths are relative to `part1/artifacts/` or
 | Margin census in float32 and float16 (Sect. 3.3, Fig. 2) | `estimate_k1_margin.py` | `fp32/`, `fp16/` |
 | Direct measurement of the candidates scoring 14 (Sect. 3.3) | `measure_score14.py` | `measure_score14.log` |
 | Enumeration over 200,000 columns, both networks (App. A.3) | `enumerate_forced_candidates.py` | `forced_candidates.log`, `forced_candidates_ttables.log` |
-| T-tables network, one key (Sect. 3.3) | `check_census_key.py` | `check_census_key_seed2029_base.log`, `check_census_key_seed2029_ttables.log` |
+| Full census on the T-tables network, fourth key (Sect. 3.3) | `MODEL=ttables HIST=1 run_attack.py --record-all` | `run_hist_2029_ttables/` |
+| Base-network colliding candidates on the T-tables key (Sect. 3.3) | `check_census_key.py` | `check_census_key_seed2029_base.log`, `check_census_key_seed2029_ttables.log` |
 | Triggers and STEP(t_F) = 2 in the four formats (Table 2) | `step_fp_trigger_experiment.py` | `step_fp_trigger_experiment.log` |
 | Recovery on the released code (Sect. 4.4) | `fp_key_recovery.py` | `fp_key_recovery.log` |
 | 80,000 keys with the output-side STEP (Sect. 4.4) | `fp_key_recovery_output_step.py` (`N_KEYS=10000`) | `fp_output_step_10000keys.log` |
