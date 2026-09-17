@@ -1,4 +1,4 @@
-# Cryptanalysis of Deep Neural Cryptography — Attack & Defense Artifacts
+# Second Round Key Recovery and a Floating-Point Attack on DNN-based AES Implementations — Artifacts
 
 Reproducible code for the paper *"Second Round Key Recovery and a Floating-Point
 Attack on DNN-based AES Implementations"* (anonymous submission). The main contributions are two key-recovery results
