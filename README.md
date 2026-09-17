@@ -1,8 +1,7 @@
 # Cryptanalysis of Deep Neural Cryptography — Attack & Defense Artifacts
 
-Reproducible code for the paper *"Cryptanalysis of Deep Neural Cryptography:
-Second Round Key Recovery on the Unprotected Implementation and a Floating-Point
-Attack on the Protected Implementation of AES"* (anonymous submission). The main contributions are two key-recovery results
+Reproducible code for the paper *"Second Round Key Recovery and a Floating-Point
+Attack on DNN-based AES Implementations"* (anonymous submission). The main contributions are two key-recovery results
 against the *"Deep Neural Cryptography"* (Gerault, Hambitzer, Ronen, Shamir;
 **GHRS**) neural-network AES and its Section 9 protection, plus a new robust
 defense. Every script imports GHRS's companion implementation **unmodified**. The
