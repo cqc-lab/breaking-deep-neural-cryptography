@@ -76,27 +76,56 @@ print("="*80)
 dt=torch.float16
 print(f"  paper example (fp16): x-1=2049 rounds to {int(T(2049,dt).item())}, "
       f"so naive_clamp(2050) = {naive_clamp(2050,dt):.0f}   (NOT in [0,1])")
-xs   = torch.arange(2, 65504, dtype=torch.float64).to(dt)
-nc   = (torch.relu(xs) - torch.relu(xs - 1)).float()
-c01  = (1 - torch.relu(1 - torch.relu(xs))).float()
-nc_out  = (nc  < -1e-3) | (nc  > 1 + 1e-3)
-c01_out = (c01 < -1e-3) | (c01 > 1 + 1e-3)
-stray   = sorted({v.item() for v in torch.unique(nc[nc_out])})
-step_of = sorted({round(step(v, dt), 3) for v in stray})
-print(f"  ClippedReLU leaves [0,1] for {int(nc_out.sum())} of the fp16 integers in [2,65504)")
-print(f"     stray values taken: {stray}  ->  STEP maps them to {step_of}  "
-      f"(binary: STEP neutralizes them, so ClippedReLU still blocks THIS attack)")
-print(f"  clamp01 leaves [0,1] for {int(c01_out.sum())} inputs  (provably 0, Lemma):  "
-      f"clamp01(1e4)={clamp01(1e4,dt):.2f}, clamp01(inf)={clamp01(float('inf'),dt):.2f}")
-print("  => ClippedReLU is not a finite-precision clamp; clamp01 confines every input")
-print("     to [0,1] unconditionally, independent of STEP tolerating out-of-range values.")
+print()
+print("  Range check of both clamps over finite representable inputs.")
+print("  bfloat16/float16: every finite value; float32: all 2^32 bit patterns;")
+print("  float64: 2*10^7 random finite bit patterns plus 2^k, 2^k+-1 for k=0..1023.")
+
+def out_of_range(v):
+    v = v.float()
+    return (v < 0) | (v > 1) | ~torch.isfinite(v)
+
+def check_chunk(x, dt):
+    x = x[torch.isfinite(x)]
+    one = T(1.0, dt)
+    nc  = torch.relu(x) - torch.relu(x - one)            # ClippedReLU (GHRS)
+    c01 = one - torch.relu(one - torch.relu(x))          # clamp01 (ours)
+    bad_nc = out_of_range(nc); bad_c01 = out_of_range(c01)
+    return x.numel(), int(bad_nc.sum()), int(bad_c01.sum()), nc[bad_nc].float()
+
+def all_bits(dt):
+    if dt in (torch.bfloat16, torch.float16):
+        yield torch.arange(-32768, 32768, dtype=torch.int16).view(dt)
+    elif dt == torch.float32:
+        for start in range(-2**31, 2**31, 2**24):
+            yield torch.arange(start, start + 2**24, dtype=torch.int64).to(torch.int32).view(torch.float32)
+    else:
+        g = torch.Generator().manual_seed(20260917)
+        for _ in range(20):
+            yield torch.randint(-2**63, 2**63 - 1, (10**6,), dtype=torch.int64, generator=g).view(torch.float64)
+        k = torch.arange(0, 1024, dtype=torch.float64)
+        pw = torch.pow(torch.tensor(2.0, dtype=torch.float64), k)
+        yield torch.cat([pw, pw + 1, pw - 1, -pw])
+
+range_summary = {}
+for name, dt, _, t in FORMATS:
+    n = bad_nc = bad_c01 = 0; vals = set()
+    for x in all_bits(dt):
+        cnt, b1, b2, v = check_chunk(x, dt)
+        n += cnt; bad_nc += b1; bad_c01 += b2
+        vals |= {round(u.item(), 4) for u in torch.unique(v)}
+    range_summary[name] = (n, bad_nc, bad_c01)
+    print(f"  {name:9}: {n:>11d} finite inputs | ClippedReLU outside [0,1]: {bad_nc:>7d} "
+          f"(values {sorted(vals)[:6]}{'...' if len(vals) > 6 else ''}) | clamp01 outside [0,1]: {bad_c01}")
+print("  => ClippedReLU is not a finite-precision clamp; clamp01 confines every tested input")
+print("     to [0,1], as Lemma 1 proves for every finite representable input.")
 
 print()
 print("="*80)
 print("(3) Full attack against clamp01-defended model (unmodified nn_aes)")
 print("="*80)
 import numpy as np, nn_aes, utils
-for name,dt,_,t in [("float16",torch.float16,10,513.0),("float32",torch.float32,23,4194305.0)]:
+for name,dt,_,t in FORMATS:
     nn_aes.DTYPE=dt
     model=nn_aes.NeuralAESBase(secret_key=0x2B7E151628AED2A6ABF7158809CF4F3C,
         direction='Encryption',c_parameter=1.0,protected=True,epsilon=1/4).to(dt).eval()
