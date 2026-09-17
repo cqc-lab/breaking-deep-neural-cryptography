@@ -355,6 +355,17 @@ you are authorized to test.
 
 ---
 
+## AI assistance
+
+The authors used Claude (Anthropic, Claude Fable 5.1, through Claude Code) as an
+assistant in preparing this artifact and the paper. It drafted and revised text
+under the authors' direction, wrote and debugged parts of the scripts in this
+repository, checked the numbers reported in the paper against the committed logs,
+and produced independent consistency reviews. The attacks, the analysis, the
+defense, and all experiments were designed and carried out by the authors, who
+reviewed every generated line and take full responsibility for the correctness of
+the code and the results.
+
 ## References
 
 1. D. Gerault, A. Hambitzer, E. Ronen, A. Shamir, *"Deep Neural Cryptography,"*
