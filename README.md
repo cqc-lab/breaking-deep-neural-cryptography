@@ -309,7 +309,7 @@ Part II tables above document. Paths are relative to `part1/artifacts/` or
 | Full censuses, two keys (Sect. 3.3) | `run_attack.py --record-all` | `run_seed2026/`, `run_seed2027/` |
 | Full score histograms, third key, all four columns (Sect. 3.3) | `HIST=1 run_attack.py --record-all` | `run_hist_2028/` |
 | Margin census in float32 and float16 (Sect. 3.3, Fig. 2) | `estimate_k1_margin.py` | `fp32/`, `fp16/` |
-| Direct measurement of the candidates scoring 14 (Sect. 3.3) | `measure_score14.py` | `measure_score14.log` |
+| Enumeration of the candidates scoring 14 (Sect. 3.3) | `measure_score14.py` | `measure_score14.log` |
 | Enumeration over 200,000 columns, both networks (App. A.3) | `enumerate_forced_candidates.py` | `forced_candidates.log`, `forced_candidates_ttables.log` |
 | Full census on the T-tables network, fourth key (Sect. 3.3) | `MODEL=ttables HIST=1 run_attack.py --record-all` | `run_hist_2029_ttables/` |
 | Base-network colliding candidates on the T-tables key (Sect. 3.3) | `check_census_key.py` | `check_census_key_seed2029_base.log`, `check_census_key_seed2029_ttables.log` |
