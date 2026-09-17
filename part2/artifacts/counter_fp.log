@@ -11,19 +11,28 @@ float64       2251799813685249 |   2.00         1.00     1.00           1.00
 (2) Is naive_clamp (GHRS ClippedReLU) a faithful [0,1] clamp in finite precision?
 ================================================================================
   paper example (fp16): x-1=2049 rounds to 2048, so naive_clamp(2050) = 2   (NOT in [0,1])
-  ClippedReLU leaves [0,1] for 512 of the fp16 integers in [2,65504)
-     stray values taken: [2.0]  ->  STEP maps them to [1.0]  (binary: STEP neutralizes them, so ClippedReLU still blocks THIS attack)
-  clamp01 leaves [0,1] for 0 inputs  (provably 0, Lemma):  clamp01(1e4)=1.00, clamp01(inf)=1.00
-  => ClippedReLU is not a finite-precision clamp; clamp01 confines every input
-     to [0,1] unconditionally, independent of STEP tolerating out-of-range values.
+
+  Range check of both clamps over finite representable inputs.
+  bfloat16/float16: every finite value; float32: all 2^32 bit patterns;
+  float64: 2*10^7 random finite bit patterns plus 2^k, 2^k+-1 for k=0..1023.
+  bfloat16 :       65280 finite inputs | ClippedReLU outside [0,1]:      64 (values [2.0]) | clamp01 outside [0,1]: 0
+  float16  :       63488 finite inputs | ClippedReLU outside [0,1]:     512 (values [2.0]) | clamp01 outside [0,1]: 0
+  float32  :  4278190080 finite inputs | ClippedReLU outside [0,1]: 4194304 (values [2.0]) | clamp01 outside [0,1]: 0
+  float64  :    19994450 finite inputs | ClippedReLU outside [0,1]:    2455 (values [2.0]) | clamp01 outside [0,1]: 0
+  => ClippedReLU is not a finite-precision clamp; clamp01 confines every tested input
+     to [0,1], as Lemma 1 proves for every finite representable input.
 
 ================================================================================
 (3) Full attack against clamp01-defended model (unmodified nn_aes)
 ================================================================================
+  bfloat16: NO defense  -> bits 128/128  full=KEY RECOVERED
+  bfloat16: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
   float16: NO defense  -> bits 128/128  full=KEY RECOVERED
   float16: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
   float32: NO defense  -> bits 128/128  full=KEY RECOVERED
   float32: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
+  float64: NO defense  -> bits 128/128  full=KEY RECOVERED
+  float64: clamp01     -> bits 65/128  full=THIS ATTACK BLOCKED   (clamped trigger STEP=1, all rows clean)
 
 ================================================================================
 (4) FIPS-197 correctness preserved by the clamp01-prepended model
