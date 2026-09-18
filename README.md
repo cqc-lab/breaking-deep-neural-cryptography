@@ -1,8 +1,7 @@
-# Cryptanalysis of Deep Neural Cryptography — Attack & Defense Artifacts
+# Second Round Key Recovery and a Floating-Point Attack on DNN-based AES Implementations — Artifacts
 
-Reproducible code for the paper *"Cryptanalysis of Deep Neural Cryptography:
-Second Round Key Recovery on the Unprotected Implementation and a Floating-Point
-Attack on the Protected Implementation of AES"* (Sisung Kim and Dongjae Lee,
+Reproducible code for the paper *"Second Round Key Recovery and a Floating-Point
+Attack on DNN-based AES Implementations"* (Sisung Kim, Minjae Lee, and Dongjae Lee,
 IACR ePrint 2026/1919, https://eprint.iacr.org/2026/1919). The main contributions are two key-recovery results
 against the *"Deep Neural Cryptography"* (Gerault, Hambitzer, Ronen, Shamir;
 **GHRS**) neural-network AES and its Section 9 protection, plus a new robust
@@ -378,7 +377,7 @@ the code and the results.
 ## License
 
 This repository is released under the **GNU General Public License v3.0 or later**
-(`LICENSE`), Copyright (C) 2026 Sisung Kim and Dongjae Lee.
+(`LICENSE`), Copyright (C) 2026 Sisung Kim, Minjae Lee, and Dongjae Lee.
 
 `nn_aes.py` and `utils.py` are GHRS's companion files, redistributed here verbatim
 under the terms of the GPL v3 of their upstream repository

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-# Copyright (C) 2026 Sisung Kim and Dongjae Lee
+# Copyright (C) 2026 Sisung Kim, Minjae Lee, and Dongjae Lee
 #
-# This file is part of the artifact for "Cryptanalysis of Deep Neural
-# Cryptography: Second Round Key Recovery on the Unprotected Implementation
-# and a Floating-Point Attack on the Protected Implementation of AES".
+# This file is part of the artifact for "Second Round Key Recovery and a
+# Floating-Point Attack on DNN-based AES Implementations".
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
